@@ -1,0 +1,31 @@
+{
+  "name": "scl-mng-api",
+  "version": "1.0.0",
+  "description": "THis API is for students",
+  "homepage": "https://github.com/i-am-bharathkumar/School-Manage-API#readme",
+  "bugs": {
+    "url": "https://github.com/i-am-bharathkumar/School-Manage-API/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/i-am-bharathkumar/School-Manage-API.git"
+  },
+  "license": "ISC",
+  "author": "BHARATH KUMAR",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js"
+  },
+  "keywords": [],
+  "dependencies": {
+    "body-parser": "^2.2.0",
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
+    "mysql2": "^3.14.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.9"
+  }
+}
