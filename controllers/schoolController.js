@@ -1,8 +1,9 @@
 const db = require('../config/db');
 
+// Haversine Formula to calculate distance between two geo coordinates
 function calculateDistance(lat1, lon1, lat2, lon2) {
   const toRad = value => (value * Math.PI) / 180;
-  const R = 6371;
+  const R = 6371; // Earth radius in km
   const dLat = toRad(lat2 - lat1);
   const dLon = toRad(lon2 - lon1);
   const a = Math.sin(dLat / 2) ** 2 +
@@ -12,29 +13,46 @@ function calculateDistance(lat1, lon1, lat2, lon2) {
   return R * c;
 }
 
-// controllers/schoolController.js
-
-exports.addSchool = async (req, res) => {
+exports.addSchool = (req, res) => {
   const { name, address, latitude, longitude } = req.body;
 
-  try {
-    const result = await db.query(
-      'INSERT INTO schools (name, address, latitude, longitude) VALUES ($1, $2, $3, $4) RETURNING *',
-      [name, address, latitude, longitude]
-    );
-    res.status(201).json({ message: 'School added successfully', school: result.rows[0] });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
+  const query = 'INSERT INTO schools (name, address, latitude, longitude) VALUES (?, ?, ?, ?)';
+  const values = [name, address, latitude, longitude];
+
+  db.query(query, values, (err, result) => {
+    if (err) {
+      return res.status(500).json({ error: err.message });
+    }
+    res.status(201).json({
+      message: 'School added successfully',
+      school: { id: result.insertId, name, address, latitude, longitude }
+    });
+  });
 };
 
-exports.listSchools = async (req, res) => {
+exports.listSchools = (req, res) => {
   const { latitude, longitude } = req.query;
-  
-  try {
-    const results = await db.query('SELECT * FROM schools');
-    // Rest of your distance calculation logic remains the same
-  } catch (err) {
-    res.status(500).json({ error: err.message });
+
+  if (!latitude || !longitude) {
+    return res.status(400).json({ message: 'Latitude and longitude are required' });
   }
+
+  db.query('SELECT * FROM schools', (err, results) => {
+    if (err) {
+      return res.status(500).json({ error: err.message });
+    }
+
+    const userLat = parseFloat(latitude);
+    const userLon = parseFloat(longitude);
+
+    const schoolsWithDistance = results.map(school => {
+      const distance = calculateDistance(userLat, userLon, school.latitude, school.longitude);
+      return { ...school, distance };
+    });
+
+    schoolsWithDistance.sort((a, b) => a.distance - b.distance);
+
+    res.json(schoolsWithDistance);
+  });
 };
+

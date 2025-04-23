@@ -1,0 +1,238 @@
+{
+	"info": {
+		"_postman_id": "e21e8c1d-5a3a-4b7c-8c3f-d4e7c0a5f4e6",
+		"name": "School Management API",
+		"description": "A collection for testing the School Management API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Add School",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Central High School\",\n    \"address\": \"123 Main Street, City, State\",\n    \"latitude\": 40.7128,\n    \"longitude\": -74.0060\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/addSchool",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"addSchool"
+					]
+				},
+				"description": "Add a new school to the database"
+			},
+			"response": [
+				{
+					"name": "Successful Response",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Central High School\",\n    \"address\": \"123 Main Street, City, State\",\n    \"latitude\": 40.7128,\n    \"longitude\": -74.0060\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/addSchool",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"addSchool"
+							]
+						}
+					},
+					"status": "Created",
+					"code": 201,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"success\": true,\n    \"message\": \"School added successfully\",\n    \"data\": {\n        \"id\": 1,\n        \"name\": \"Central High School\",\n        \"address\": \"123 Main Street, City, State\",\n        \"latitude\": 40.7128,\n        \"longitude\": -74.0060\n    }\n}"
+				},
+				{
+					"name": "Validation Error",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Central High School\",\n    \"address\": \"123 Main Street, City, State\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/addSchool",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"addSchool"
+							]
+						}
+					},
+					"status": "Bad Request",
+					"code": 400,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"errors\": [\n        \"Latitude is required\",\n        \"Longitude is required\"\n    ]\n}"
+				}
+			]
+		},
+		{
+			"name": "List Schools",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/api/listSchools?latitude=40.7128&longitude=-74.0060",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"api",
+						"listSchools"
+					],
+					"query": [
+						{
+							"key": "latitude",
+							"value": "40.7128",
+							"description": "User's latitude"
+						},
+						{
+							"key": "longitude",
+							"value": "-74.0060",
+							"description": "User's longitude"
+						}
+					]
+				},
+				"description": "List all schools sorted by distance from the user's location"
+			},
+			"response": [
+				{
+					"name": "Successful Response",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/listSchools?latitude=40.7128&longitude=-74.0060",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"listSchools"
+							],
+							"query": [
+								{
+									"key": "latitude",
+									"value": "40.7128"
+								},
+								{
+									"key": "longitude",
+									"value": "-74.0060"
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"success\": true,\n    \"count\": 3,\n    \"data\": [\n        {\n            \"id\": 1,\n            \"name\": \"Central High School\",\n            \"address\": \"123 Main Street, City, State\",\n            \"latitude\": 40.7128,\n            \"longitude\": -74.0060,\n            \"distance\": 0.00\n        },\n        {\n            \"id\": 2,\n            \"name\": \"North High School\",\n            \"address\": \"456 Broadway, City, State\",\n            \"latitude\": 40.7500,\n            \"longitude\": -74.0000,\n            \"distance\": 4.32\n        },\n        {\n            \"id\": 3,\n            \"name\": \"East High School\",\n            \"address\": \"789 Park Avenue, City, State\",\n            \"latitude\": 40.7000,\n            \"longitude\": -73.9500,\n            \"distance\": 5.16\n        }\n    ]\n}"
+				},
+				{
+					"name": "Missing Parameters",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/listSchools",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"listSchools"
+							]
+						}
+					},
+					"status": "Bad Request",
+					"code": 400,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"errors\": [\n        \"Latitude query parameter is required\",\n        \"Longitude query parameter is required\"\n    ]\n}"
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:5000",
+			"type": "string"
+		}
+	]
+}
